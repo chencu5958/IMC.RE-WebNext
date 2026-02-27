@@ -1,0 +1,373 @@
+<script lang="ts" setup>
+import { storeToRefs } from 'pinia'
+import ScrollingText from './ScrollingText.vue'
+
+// 使用导航状态 store
+const navigationStore = useNavigationStore()
+
+// 从媒体查询获取断点信息
+const { width, height, currentBreakpoint } = useMediaQuery()
+
+// 使用 storeToRefs 保持所有属性的响应性
+const { devMode, forceMobile, forceDesktop } = storeToRefs(navigationStore)
+
+// 控制展开状态
+const isAlwaysExpanded = ref(false) // 按钮控制的始终展开状态（优先级最高）
+const isHoverEnabled = ref(true) // 是否启用 hover 展开功能
+const isHovered = ref(false) // hover 状态
+
+// 检测输入类型（鼠标/触摸）
+const inputType = ref<'mouse' | 'touch' | 'pen'>('mouse')
+
+// 计算展开状态：始终展开 > hover展开（仅当启用时且使用鼠标时）
+const isExpanded = computed(() => isAlwaysExpanded.value || (isHoverEnabled.value && inputType.value === 'mouse' && isHovered.value))
+
+// 监听指针事件来检测输入类型
+const handlePointerDown = (e: PointerEvent) => {
+    inputType.value = e.pointerType as 'mouse' | 'touch' | 'pen'
+}
+
+// 暴露给父组件使用的状态
+defineExpose({
+    isExpanded
+})
+
+// 计算 widgetpop 的定位样式
+const widgetPopStyle = computed(() => {
+    const navWidth = isExpanded.value ? '12.5rem' : '4.5rem'
+    return {
+        position: 'fixed',
+        left: navWidth,
+        top: 'auto',
+        bottom: '2rem',
+        zIndex: '1000'
+    }
+})
+
+// 切换展开状态
+const toggleExpand = () => {
+    isAlwaysExpanded.value = !isAlwaysExpanded.value
+}
+
+// 调试控制函数（使用 store 的方法）
+const toggleForceMobile = () => navigationStore.toggleForceMobile()
+const toggleForceDesktop = () => navigationStore.toggleForceDesktop()
+
+// 触摸处理 - 触摸时强制展开
+const handleTouch = (e: PointerEvent) => {
+    inputType.value = 'touch'
+
+    // 检查点击的目标是否是特定按钮（展开按钮、hover开关等）
+    const target = e.target as HTMLElement
+    const isButtonClick = target.closest('.expand-btn') 
+
+    // 如果不是点击这些按钮，才设置强制展开
+    if (!isButtonClick) {
+        isAlwaysExpanded.value = true
+    }
+}
+</script>
+
+<template>
+    <div class="horizon-navSectionContainer" :class="{ 'input-type-touch': inputType === 'touch' }"
+        @pointerdown="handlePointerDown">
+        <!-- 开发环境调试面板 -->
+        <div v-if="devMode" class="dev-debug-panel">
+            <button @click="toggleForceMobile" :class="{ active: forceMobile }" class="debug-btn">
+                强制移动端
+            </button>
+            <button @click="toggleForceDesktop" :class="{ active: forceDesktop }" class="debug-btn">
+                强制桌面端
+            </button>
+            <span class="current-breakpoint">
+                当前断点: {{ currentBreakpoint }}
+            </span>
+            <div style="color: white; margin-top: 10px; font-size: 10px;">
+                调试状态: Mobile={{ forceMobile }}, Desktop={{ forceDesktop }}, Hover={{ isHoverEnabled }}
+            </div>
+        </div>
+
+        <!-- 移动端显示 -->
+        <div v-if="navigationStore.isMobileView" class="">
+            Mobile Nav
+        </div>
+
+        <!-- 桌面端显示 -->
+        <template v-else>
+            <!-- 桌面端占位符 -->
+            <div class="desktop-nav-placeholder" @pointerdown="handlePointerDown"></div>
+
+            <div class="horizion-widget-pop horizon-widget-container" :style="widgetPopStyle">
+                User Account
+            </div>
+            <!-- 实际导航栏 -->
+            <div class="desktop-nav" :class="{ 'expanded': isExpanded, 'always-expanded': isAlwaysExpanded }"
+                @mouseenter="isHovered = true" @mouseleave="isHovered = false" @touchstart="handleTouch">
+                <div class="horizon-navSection-desktop">
+                    <div class="horizon-navLogo">
+                        <img class="horizon-navLogo-img" src="/assets/imgs/common/logo1.svg" alt="Logo">
+                    </div>
+                    <div class="nav-content-wrapper">
+                        <div class="nav-item-container">
+                            <div class="horizon-navMenuItem">
+                                <Icon class="menu-icon" name="tdesign:home" />
+                                <span v-if="isExpanded" class="menu-text">Home</span>
+                            </div>
+                            <div class="horizon-navMenuItem">
+                                <Icon class="menu-icon" name="tdesign:system-components" />
+                                <span v-if="isExpanded" class="menu-text">About US</span>
+                            </div>
+                            <div class="horizon-navMenuItem">
+                                <Icon class="menu-icon" name="tdesign:shrimp" />
+                                <span v-if="isExpanded" class="menu-text">Community</span>
+                            </div>
+                            <div class="horizon-navMenuItem">
+                                <Icon class="menu-icon" name="tdesign:folder-open" />
+                                <span v-if="isExpanded" class="menu-text">Blog</span>
+                            </div>
+                        </div>
+                        <div class="menu-widget-container">
+                            <div class="horizon-widget-container">
+                                <div class="horizon-widget-button">
+                                    <Icon class="test" name="tdesign:user-1" />
+                                </div>
+                                <div class="horizon-widget-button">
+                                    <Icon class="test" name="tdesign:translate" />
+                                </div>
+                                <div class="horizon-widget-button">
+                                    <Icon class="test" name="tdesign:artboard" />
+                                </div>
+                                <div class="horizon-widget-button" @click="isHoverEnabled = !isHoverEnabled"
+                                    :class="{ active: isHoverEnabled }"
+                                    :title="isHoverEnabled ? '关闭Hover展开' : '开启Hover展开'">
+                                    <Icon class="test"
+                                        :name="isHoverEnabled ? 'tdesign:center-focus-strong-filled' : 'tdesign:center-focus-strong'" />
+                                </div>
+                                <WidgetColorsw use-widget-style />
+                                <WidgetMusicPlayer use-widget-style />
+                            </div>
+                        </div>
+                        <button @click="toggleExpand" class="horizon-navUtils-desktop-scaleSwitcher expand-btn">
+                            <Icon class="horizon-navUtils-desktop-scaleSwitcher-icon" v-if="!isExpanded"
+                                name="tdesign:component-breadcrumb" />
+                            <Icon class="horizon-navUtils-desktop-scaleSwitcher-icon" v-else-if="!isAlwaysExpanded"
+                                name="tdesign:component-breadcrumb" />
+                            <Icon class="horizon-navUtils-desktop-scaleSwitcher-icon" v-else
+                                name="tdesign:component-breadcrumb-filled" style="transform: scaleX(-1);" />
+                            <ScrollingText text="OVER THE FRONTIER" separator=" // " :enable-word-split="false"
+                                :speed="30" text-class="horizon-navUtils-desktop-scaleSwitcher-scrolling-text"
+                                class="horizon-navUtils-desktop-scaleSwitcher-mask-text" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
+
+<style lang="scss" scoped>
+@use "~/assets/css/themes/mixins/decorators" as decorators;
+
+.test {
+    background-color: #fff;
+}
+
+.horizon-widget-button {
+    &.active {
+        color: #4CAF50;
+    }
+}
+
+.dev-debug-panel {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+
+    .debug-btn {
+        background: #666;
+        border: 1px solid #999;
+        color: white;
+        padding: 4px 8px;
+        margin-right: 5px;
+        border-radius: 3px;
+        cursor: pointer;
+
+        &.active {
+            background: #4CAF50;
+            border-color: #45a049;
+        }
+    }
+
+    .current-breakpoint {
+        margin-left: 10px;
+    }
+}
+
+// 桌面端占位符 - 固定宽度
+.desktop-nav-placeholder {
+    width: 5rem; // 始终保持基础宽度
+    min-height: 100vh;
+}
+
+
+.desktop-nav {
+    width: 5rem;
+    background: var(--horizon-nav-desktop-background-color);
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    // 简化动画，模仿示例的实现方式
+    transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    overflow: hidden;
+
+    // 展开状态
+    &.expanded {
+        width: 12rem;
+    }
+
+    // 伪元素作为装饰性 Mask
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0; // 拉伸到右侧
+        bottom: 0; // 拉伸到底部
+        background-image: url('/assets/imgs/res/endless_mask.svg');
+        background-size: 120px; // 启用拉伸填充
+        background-repeat: no-repeat;
+        opacity: 0.5; // 收回时的透明度
+        z-index: 0;
+        transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    // 展开时调整 Mask 透明度
+    &.expanded::before {
+        opacity: 0.5; // 展开时的透明度
+    }
+
+    &>div {
+        position: relative;
+        z-index: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        transition: padding 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        height: 100vh; // 确保容器占满视口高度
+        display: flex;
+        flex-direction: column;
+    }
+
+}
+
+// 导航内容包装器
+.nav-content-wrapper {
+    flex: 1; // 自动填充剩余空间
+    display: flex;
+    flex-direction: column;
+    min-height: 0; // 允许子元素收缩
+}
+
+// NavItem 容器
+.nav-item-container {
+    flex: 2; // 默认占用2份空间
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-left: 1rem;
+    min-height: 0; // 允许内容收缩
+}
+
+// 导航菜单项样式
+.horizon-navMenuItem {
+
+    .menu-icon {
+        font-size: 1.25rem;
+        color: white;
+        min-width: 1.25rem;
+        transform: translateZ(0); // GPU加速
+        will-change: transform, margin;
+        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), margin 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+
+        // 未展开时图标居中
+        .desktop-nav:not(.expanded) & {
+            margin-left: 0.5rem;
+            transform: translateX(0);
+        }
+
+        // 展开时恢复正常定位
+        .desktop-nav.expanded & {
+            margin: 0;
+            transform: translateX(0);
+        }
+    }
+
+    .menu-text {
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-left: 0.5rem;
+        white-space: nowrap;
+        animation: textAppear 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+}
+
+// 文字出现动画
+@keyframes textAppear {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// MenuWidget 容器
+.menu-widget-container {
+    flex: 1; // 默认占用1份空间
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; // 拉伸子元素填充容器宽度
+    justify-content: flex-end; // 内容靠底部对齐
+    min-height: 0; // 允许内容收缩
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+
+    // 展开状态下的widget容器动画
+    .desktop-nav.expanded & {
+        transition-delay: 0.15s;
+    }
+}
+
+.horizon-widget-pop {
+    position: fixed;
+    background: var(--horizon-color-blue-400);
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    transition: left 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.expand-btn {
+
+    // 滚动文本样式 - 直接在scoped样式中定义
+    :global(.nav-scrolling-text) {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.3);
+        opacity: 0.6;
+    }
+
+}
+</style>

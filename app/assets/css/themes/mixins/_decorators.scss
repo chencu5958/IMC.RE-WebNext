@@ -1,0 +1,83 @@
+// 装饰性样式混合宏
+// 用于创建统一的视觉装饰效果
+
+// SVG背景遮罩混合宏
+// @param $opacity 透明度，默认1
+// @param $z-index 层级，默认-1
+// @param $image-url 图片路径，默认contour_map.svg
+// @param $size 背景大小，默认cover，可设置固定像素值如120px
+@mixin svg-background-overlay($opacity:0.8, $z-index: -1, $image-url: '/assets/imgs/res/contour_map.svg', $size: cover) {
+    position: relative;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url($image-url);
+        background-size: $size;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: inherit;
+        opacity: $opacity;
+        z-index: $z-index;
+        pointer-events: none;
+        // 固定大小模式下启用拉伸填充，避免重排
+        @if $size != cover and $size != contain {
+            background-repeat: repeat;
+        }
+    }
+}
+
+// 装饰条混合宏
+// @param $position 位置，默认right
+// @param $width 宽度，默认3%
+// @param $height 高度，默认80%
+// @param $color 颜色，默认#ffdb67
+@mixin decorative-bar($position: right, $width: 3%, $height: 80%, $color: #ffdb67) {
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        #{$position}: 95%;
+        width: $width;
+        border-radius: 4px;
+        height: $height;
+        background-color: $color;
+        display: block;
+        transform: translateY(-50%);
+        z-index: 0;
+    }
+}
+
+// 警戒线纹理混合宏（基于用户偏好的高密度效果）
+// @param $size 纹理大小，默认2px（小像素值提升密度）
+// @param $color1 第一种颜色，默认#333
+// @param $color2 第二种颜色，默认#000
+@mixin warning-stripe-pattern($size: 2px, $color1: #333, $color2: #000) {
+    background: repeating-linear-gradient(
+        45deg,
+        $color1,
+        $color1 $size,
+        $color2 $size,
+        $color2 ($size * 2)
+    );
+}
+
+// 响应式flex布局混合宏
+// @param $breakpoint 断点，默认6rem
+@mixin responsive-flex-layout($breakpoint: 6rem) {
+    // 窄屏样式
+    @media (max-width: $breakpoint) {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    // 宽屏样式
+    @media (min-width: ($breakpoint + 0.01rem)) {
+        flex-direction: row;
+        width: auto;
+    }
+}

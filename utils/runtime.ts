@@ -1,0 +1,212 @@
+import { loadEnv } from 'vite';
+import { execSync } from 'child_process';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+interface VITE_ENV_CONFIG {
+  VITE_APP_ENV: string
+  VITE_APP_TITLE: string
+  [key: string]: string
+}
+
+// 使用环境变量控制日志输出，避免重复打印，只对白名单命令显示日志
+const allowedCommands = ['build', 'dev', 'generate', 'analyze'];
+const shouldLog = !process.env.RUNTIME_CONFIG_LOADED && allowedCommands.includes(process.env.npm_lifecycle_event || '');
+
+// EdgeOne Pages缺少需要的Git信息，需要手动配置CI_PLATFROM_TYPE
+export function createRuntimeConfig() {
+  const envScript = process.env.npm_lifecycle_script?.split(' ') || []
+  let envName = 'development' // 默认环境
+
+  // 通过启动命令区分环境
+  if (envScript.length > 0) {
+    // 查找命令中的实际操作部分（nuxt build -> build, nuxt dev -> dev）
+    const commandIndex = envScript.findIndex(cmd => ['build', 'dev', 'generate', 'preview'].includes(cmd))
+    const command = commandIndex !== -1 ? envScript[commandIndex] : envScript[0]
+
+    if (command === 'build' || command === 'generate') {
+      envName = 'production'
+    } else if (command === 'dev') {
+      envName = 'development'
+    }
+
+    // 检查是否有明确的环境参数
+    const lastArg = envScript[envScript.length - 1]
+    if (lastArg === 'production') {
+      envName = 'production'
+    } else if (lastArg === 'development' || lastArg === 'dev') {
+      envName = 'development'
+    }
+  }
+
+  const envData = loadEnv(envName, 'env') as unknown as VITE_ENV_CONFIG
+
+  // 获取 package.json 版本信息
+  let packageVersion = '0.0.0-Unknown';
+  try {
+    const packageJsonPath = join(process.cwd(), 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+    packageVersion = packageJson.version || '0.0.0-Unknown';
+    if (shouldLog) {
+      console.log(`✅ Package 版本获取成功: ${packageVersion}`);
+    }
+  } catch (error) {
+    console.warn('❌ 无法获取 Package 版本信息:', error);
+  }
+
+  // 获取 Git Hash 和分支信息
+  let gitHash = 'dev-build';
+  let gitBranch = 'unknown';
+
+  // 优先使用 CI/CD 平台的环境变量
+  if (process.env.CF_PAGES_COMMIT_SHA) {
+    // Cloudflare Pages
+    gitHash = process.env.CF_PAGES_COMMIT_SHA.substring(0, 8);
+    gitBranch = process.env.CF_PAGES_BRANCH || 'unknown';
+    if (shouldLog) {
+      console.log(`✅ Git 信息获取成功 (Cloudflare Pages): ${gitHash} | ${gitBranch}`);
+    }
+  } else if (process.env.CI_PLATFORM_TYPE === 'EdgeOne-Pages') {
+    // 腾讯云 EdgeOne Pages
+    if (process.env.EDGEONE_COMMIT_SHA) {
+      gitHash = process.env.EDGEONE_COMMIT_SHA.substring(0, 8);
+    } else {
+      // 环境变量获取失败时，使用 git 命令
+      try {
+        gitHash = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim().substring(0, 8);
+      } catch (error) {
+        console.warn('❌ 无法通过 git 命令获取 commit hash:', error);
+        gitHash = 'unknown';
+      }
+    }
+
+    if (process.env.EDGEONE_BRANCH || process.env.CI_COMMIT_REF_NAME) {
+      gitBranch = process.env.EDGEONE_BRANCH || process.env.CI_COMMIT_REF_NAME || 'unknown';
+    } else {
+      // 环境变量获取失败时，使用 git 命令
+      try {
+        gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
+      } catch (error) {
+        console.warn('❌ 无法通过 git 命令获取分支信息:', error);
+        gitBranch = 'unknown';
+      }
+    }
+
+    if (shouldLog) {
+      console.log(`✅ Git 信息获取成功 (腾讯云 EdgeOne Pages): ${gitHash} | ${gitBranch}`);
+    }
+  } else if (process.env.VERCEL_GIT_COMMIT_SHA) {
+    // Vercel
+    gitHash = process.env.VERCEL_GIT_COMMIT_SHA.substring(0, 8);
+    gitBranch = process.env.VERCEL_GIT_COMMIT_REF || 'unknown';
+    if (shouldLog) {
+      console.log(`✅ Git 信息获取成功 (Vercel): ${gitHash} | ${gitBranch}`);
+    }
+  } else if (process.env.GITHUB_SHA) {
+    // GitHub Actions
+    gitHash = process.env.GITHUB_SHA.substring(0, 8);
+    gitBranch = process.env.GITHUB_REF_NAME || 'unknown';
+    if (shouldLog) {
+      console.log(`✅ Git 信息获取成功 (GitHub Actions): ${gitHash} | ${gitBranch}`);
+    }
+  } else {
+    // 本地开发环境使用 git 命令
+    try {
+      gitHash = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim().substring(0, 8);
+      gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
+      if (shouldLog) {
+        console.log(`✅ Git 信息获取成功 (本地): ${gitHash} | ${gitBranch}`);
+      }
+    } catch (error) {
+      console.warn('❌ 无法获取 Git 信息:', error);
+      gitHash = 'unknown';
+      gitBranch = 'unknown';
+    }
+  }
+
+  if (shouldLog) {
+    console.log(`✅ Env 环境配置: ${envName.charAt(0).toUpperCase() + envName.slice(1)}`);
+  }
+
+  // 生成 Build ID
+  let buildId = 'unknown';
+  let platform = 'local';
+  try {
+    let timestamp = Date.now().toString(36);
+
+    // 检测平台环境
+    if (process.env.CF_PAGES_COMMIT_SHA) {
+      platform = 'Cloudflare-Pages';
+    } else if (process.env.CI_PLATFORM_TYPE === 'EdgeOne-Pages') {
+      platform = 'EdgeOne-Pages';
+    } else if (process.env.VERCEL_GIT_COMMIT_SHA) {
+      platform = 'Vercel';
+    } else if (process.env.GITHUB_SHA) {
+      platform = 'Github';
+    }
+
+    // 生成格式：timestamp-gitHash-branch-platform
+    buildId = `${timestamp}-${gitHash}-${gitBranch}-${platform}`;
+
+    if (shouldLog) {
+      console.log(`✅ Build ID 生成成功: ${buildId}`);
+    }
+  } catch (error) {
+    console.warn('❌ 无法生成 Build ID:', error);
+    buildId = `fallback-${Date.now().toString(36)}-${platform}`;
+  }
+
+  // 标记已加载，避免后续重复打印
+  process.env.RUNTIME_CONFIG_LOADED = 'true';
+
+  const config = {
+    runtimeConfig: {
+      public: {
+        ...envData,
+        gitHash: gitHash,
+        gitBranch: gitBranch,
+        packageVersion: packageVersion,
+        buildId: buildId,
+        buildTime: (() => {
+          const timeZone = 'Asia/Shanghai';
+          const now = new Date();
+          const timeString = now.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+            timeZone: timeZone
+          });
+
+          // 获取时区偏移
+          const formatter = new Intl.DateTimeFormat('en', {
+            timeZone: timeZone,
+            timeZoneName: 'short'
+          });
+          const parts = formatter.formatToParts(now);
+          const timeZoneName = parts.find(part => part.type === 'timeZoneName')?.value || '';
+
+          // 提取 GMT 偏移量，如果没有则使用本地时区
+          let gmtOffset = '';
+          if (timeZoneName.includes('GMT')) {
+            gmtOffset = ` (${timeZoneName})`;
+          } else {
+            // 计算本地时区的 GMT 偏移
+            const localOffset = -now.getTimezoneOffset();
+            const sign = localOffset >= 0 ? '+' : '-';
+            const hours = Math.floor(Math.abs(localOffset) / 60);
+            const minutes = Math.abs(localOffset) % 60;
+            gmtOffset = minutes > 0 ? ` (GMT${sign}${hours}:${minutes})` : ` (GMT${sign}${hours})`;
+          }
+
+          return timeString + gmtOffset;
+        })()
+      } as any // 把env放入这个里面，通过useRuntimeConfig获取      
+    }
+  };
+
+  return config;
+}

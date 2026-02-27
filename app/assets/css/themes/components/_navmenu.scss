@@ -1,0 +1,306 @@
+@use '../mixins/decorators'as decorators;
+
+// 定义常用变量
+$transition-timing: cubic-bezier(0.23, 1, 0.32, 1);
+$widget-spacing: 0.25rem;
+$responsive-breakpoint: 6rem;
+
+// ==================== 基础布局 ====================
+.horizon {
+
+    &-navLogo {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+
+        &-img {
+            width: 4rem;
+            height: 4rem;
+        }
+    }
+
+    &-navSectionContainer {
+        position: sticky;
+        width: fit-content;
+    }
+
+    &-navSection {
+        display: flex;
+
+        &-desktop {
+            @extend .horizon-navSection;
+            flex-direction: column;
+        }
+
+        min-height: 100vh;
+    }
+
+    &-navUtils {
+        &-desktop {
+            &-scaleSwitcher {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.1rem;
+                background-color: var(--horizon-nav-background-color-black);
+                width: 100%;
+                max-height: 2rem;
+                border: none;
+                padding: 0.5rem 0.1rem;
+                transition: transform 0.4s $transition-timing;
+                @include decorators.svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
+
+                &:hover {
+                    background-color: rgb(33, 33, 33);
+                    transition: background-color 0.5s $transition-timing;
+                }
+
+                &-icon {
+                    color: white;
+                    font-size: 1.5rem;
+                }
+
+                &-mask-text {
+                    position: absolute;
+                    top: 50%;
+                    pointer-events: none;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                &-scrolling-text {
+                    font-size: 0.9rem;
+                    font-weight: bold;
+                    color: rgba(255, 255, 255, 0.3);
+                    opacity: 0.6;
+                }
+            }
+        }
+    }
+}
+
+// ==================== Widget 容器 ====================
+.horizon-widget {
+    &-container {
+        @include decorators.svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
+        background-color: var(--horizon-nav-background-color-black-rgba);
+        margin: 0.4rem;
+        padding: 0.5rem;
+        border-radius: 4px;
+
+        display: flex;
+        flex-wrap: wrap;
+        gap: $widget-spacing;
+        justify-content: center;
+        align-items: center;
+
+        @include decorators.responsive-flex-layout($responsive-breakpoint);
+    }
+
+    &-button {
+        color: var(--horizon-nav-background-color-white);
+        position: relative;
+        font-size: 1.2rem;
+        width: max-content;
+        height: max-content;
+        min-width: max-content;
+        min-height: max-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        padding: 0.25rem;
+        border-radius: 3px;
+        transition: all 0.4s $transition-timing;
+        cursor: pointer;
+        flex-shrink: 0;
+        will-change: transform, opacity, background-color;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+
+        .widget-icon-inner {
+            color: var(--horizon-nav-background-color-white);
+        }
+
+        .widget-icon-container {
+            width: 1.2rem;
+            height: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .widget-icon-enter-active,
+        .widget-icon-leave-active {
+            transition: all 0.3s $transition-timing;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .widget-icon-enter-from {
+            opacity: 0;
+            transform: scale(0.8) rotate(180deg);
+        }
+
+        .widget-icon-leave-to {
+            opacity: 0;
+            transform: scale(1.2) rotate(-180deg);
+        }
+
+        position: relative;
+
+        // Hover 效果
+        &:hover {
+            background-color: var(--horizon-nav-hover-color-white-rgba);
+            transform: translateZ(0) scale(1.1) translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        // Active 效果（PC 端和触摸端通用）
+        &:active {
+            transform: translateZ(0) scale(0.95) translateY(-1px);
+            transition: transform 0.1s $transition-timing;
+            filter: brightness(0.9);
+        }
+    }
+}
+
+// ==================== NavMenuItem ====================
+.horizon-navMenuItem {
+    min-width: 100%;
+    background-color: var(--horizon-nav-background-color-black);
+    position: relative;
+    border-radius: 4px 0 0 4px;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.5rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    transition: transform 0.4s $transition-timing, opacity 0.4s $transition-timing;
+    @include decorators.svg-background-overlay($opacity: 0.8, $z-index: -1, $image-url: '/assets/imgs/res/contour_map.svg', $size: 200px);
+    @include decorators.decorative-bar(right, 0.2rem);
+
+    &::after {
+        right: 0.5rem;
+        background-image: linear-gradient(to bottom,
+                #4FC3F7 0%, #4FC3F7 33.33%,
+                #FF9800 33.33%, #FF9800 66.66%,
+                #FFDB67 66.66%, #FFDB67 100%);
+        background-size: 100% 300%;
+        background-position: 0 100%;
+        clip-path: inset(0 0 0 0);
+        transition: all 0.3s $transition-timing;
+    }
+
+    // Hover 效果（PC 端）
+    &:hover {
+        background-color: var(--horizon-nav-hover-color);
+        transition: all 0.3s $transition-timing;
+        transform: translateZ(0) scale(0.95) translateX(0.4rem);
+        box-shadow: -3px 5px 0px 1px var(--horizon-nav-background-color-black-rgba);
+
+        &::before {
+            opacity: 1;
+            transition: opacity 0.3s $transition-timing;
+        }
+
+        &::after {
+            background-position: 0 0%;
+            background-size: 100% 100%;
+        }
+    }
+
+    // Active 效果（PC 端）
+    &:active {
+        transform: translateZ(0) scale(0.9) translateX(0.6rem);
+        transition: transform 0.1s $transition-timing;
+        box-shadow: -2px 3px 0px 1px var(--horizon-nav-background-color-black-rgba);
+
+        &::before {
+            opacity: 1;
+        }
+
+        &::after {
+            background-position: 0 0%;
+            background-size: 100% 100%;
+        }
+    }
+}
+
+// ==================== 触摸设备适配 ====================
+.horizon-navSectionContainer.input-type-touch {
+    // 禁用 hover，避免状态卡住
+    .horizon-navMenuItem,
+    .horizon-widget-button {
+        &:hover {
+            background-color: var(--horizon-nav-background-color-black);
+            transform: translateZ(0);
+            box-shadow: none;
+
+            &::before {
+                opacity: 0.8;
+            }
+
+            &::after {
+                background-position: 0 100%;
+                background-size: 100% 300%;
+            }
+        }
+    }
+
+    // Widget-button 单独重置 hover 背景（它没有 before/after）
+    .horizon-widget-button {
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    // NavMenuItem 的 Active（触摸端使用完整效果）
+    .horizon-navMenuItem {
+        &:active {
+            background-color: var(--horizon-nav-hover-color);
+            transform: translateZ(0) scale(0.95) translateX(0.4rem);
+            box-shadow: -3px 5px 0px 1px var(--horizon-nav-background-color-black-rgba);
+
+            &::before {
+                opacity: 1;
+            }
+
+            &::after {
+                background-position: 0 0%;
+                background-size: 100% 100%;
+            }
+        }
+    }
+
+    // Widget-button 的 Active（触摸端保持通用效果）
+    .horizon-widget-button {
+        &:active {
+            background-color: var(--horizon-nav-hover-color-white-rgba);
+            transform: translateZ(0) scale(0.95) translateY(-1px);
+            transition: transform 0.1s $transition-timing;
+            filter: brightness(0.9);
+        }
+    }
+}
+
+// ==================== 响应式适配 ====================
+@media screen and (max-width: 768px) {
+    .horizon {
+        .navLogo {
+            &-img {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+    }
+}
