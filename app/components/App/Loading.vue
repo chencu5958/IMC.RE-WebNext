@@ -60,11 +60,11 @@ onUnmounted(() => {
 
 <template>
     <div v-if="isLoading" class="horizon-loading-overlay">
-        <div class="horizon-loading-bg"></div>
-        <div class="horizon-loading-top">
+        <div class="horizon-loading-splash"></div>
+        <div class="horizon-loading-position-top">
             <div class="horizon-loading-logo">//IMC.RE</div>
         </div>
-        <div class="horizon-loading-center">
+        <div class="horizon-loading-position-center">
             <div class="horizon-loading-hollow">
                 <div class="hollow-line">STARBOW</div>
                 <div class="hollow-line">SYSTEM</div>
@@ -72,8 +72,8 @@ onUnmounted(() => {
                 <div class="hollow-line">{{ progress }}%</div>
             </div>
         </div>
-        <div class="horizon-loading-bottom">
-            <div class="horizon-loading-text-bg">
+        <div class="horizon-loading-position-bottom">
+            <div class="horizon-loading-scrolling-wrapper">
                 <ScrollingText :text="scrollText" :speed="30" :repeat-count="0" separator=" • "
                     :enable-word-split="true" text-class="horizon-loading-scrolling-text" />
             </div>
@@ -96,106 +96,6 @@ onUnmounted(() => {
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
-    }
-
-    &-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        backdrop-filter: blur(var(--horizon-common-blur));
-        -webkit-backdrop-filter: blur(var(--horizon-common-blur));
-    }
-
-    &-bg {
-        position: absolute;
-        inset: 0;
-        background-image: url(https://images.unsplash.com/photo-1756806983702-1fdd1574aa6f?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        opacity: 1;
-        z-index: 0;
-        pointer-events: none;
-    }
-
-    &-top {
-        padding: 20px;
-        position: relative;
-        z-index: 1;
-    }
-
-    &-logo {
-        font-size: 2rem;
-        color: #FFD700;
-        font-family: "DingTalk JinBuTi";
-        user-select: none;
-    }
-
-    &-bottom {
-        padding: 0;
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    &-text-bg {
-        font-size: 20px;
-        font-family: "DingTalk JinBuTi";
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 900;
-        user-select: none;
-        z-index: 0;
-        margin-bottom: -6px;
-        overflow: hidden;
-        white-space: nowrap;
-        position: relative;
-    }
-
-    &-center {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-        z-index: 1;
-    }
-
-    &-progress {
-        height: 25px;
-        width: 100%;
-        background: rgba(65, 65, 65, 0.4);
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-    }
-
-    &-text {
-        position: relative;
-        z-index: 2;
-        font-size: 16px;
-        font-family: "DingTalk JinBuTi";
-        color: transparent;
-        padding-left: 12px;
-        white-space: nowrap;
-        font-weight: 900;
-        background: linear-gradient(135deg,
-                #a0a0a0 0%,
-                #d4d4d4 25%,
-                #ffffff 50%,
-                #d4d4d4 75%,
-                #a0a0a0 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        text-shadow: none;
-        filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.9));
     }
 }
 </style>

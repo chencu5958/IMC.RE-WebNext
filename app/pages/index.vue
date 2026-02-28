@@ -1,11 +1,12 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import LayoutNav from '~/components/Layout/LayoutNav.vue';
-
 </script>
 
 <template>
   <LayoutNav>
-    123456
+    <div class="horizon-content">
+      123
+    </div>
   </LayoutNav>
 </template>
 
@@ -17,8 +18,8 @@ import LayoutNav from '~/components/Layout/LayoutNav.vue';
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  width: 100%;
-  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 </style>

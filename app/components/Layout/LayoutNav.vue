@@ -13,7 +13,9 @@ const containerFlexDirection = computed(() => {
 <template>
     <div class="horizon-container">
         <HorizonNav />
-        <slot />
+        <div class="content-wrapper">
+            <slot />
+        </div>
     </div>
 </template>
 
@@ -21,7 +23,14 @@ const containerFlexDirection = computed(() => {
 .horizon-container {
     display: flex;
     flex-direction: v-bind(containerFlexDirection);
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
     transition: flex-direction 0.3s ease;
+}
+
+.content-wrapper {
+    flex: 1;
+    overflow: auto;
 }
 </style>

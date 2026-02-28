@@ -2,46 +2,145 @@
 
 .horizon-loading {
 
-  // 拟物化进度条填充效果
-  &-progress-fill {
-    position: absolute;
-    left: 0;
+  &-overlay {
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    backdrop-filter: blur(var(--horizon-common-blur));
+    -webkit-backdrop-filter: blur(var(--horizon-common-blur));
+  }
+  
+  &-logo {
+    font-size: 2rem;
+    color: #FFD700;
+    font-family: "DingTalk JinBuTi";
+    user-select: none;
+  }
 
-    // 直接在background上添加阴影效果
-    background:
-      repeating-linear-gradient(45deg,
-        #222222,
-        #222222 10px,
-        #000 10px,
-        #000 20px),
-      // 添加顶部高光
-      linear-gradient(to bottom,
-        rgba(255, 215, 0, 0.3) 0%,
-        transparent 30%,
-        transparent 70%,
-        rgba(0, 0, 0, 0.2) 100%);
+  &-position {
+    &-top {
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
 
-    background-size: 28.28px 28.28px, 100% 100%;
-    background-repeat: repeat, no-repeat;
-    // 拟物化效果
-    /** 拟物化效果 
+    &-center {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    &-bottom {
+      padding: 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &-splash {
+    position: absolute;
+    inset: 0;
+    background-image: url(/assets/imgs/res/loading-splash.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 1;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  // 拟物化进度条填充效果
+  &-progress {
+    height: 25px;
+    width: 100%;
+    background: rgba(65, 65, 65, 0.4);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+
+    &-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+
+      // 直接在background上添加阴影效果
+      background:
+        repeating-linear-gradient(45deg,
+          #222222,
+          #222222 10px,
+          #000 10px,
+          #000 20px),
+        // 添加顶部高光
+        linear-gradient(to bottom,
+          rgba(255, 215, 0, 0.3) 0%,
+          transparent 30%,
+          transparent 70%,
+          rgba(0, 0, 0, 0.2) 100%);
+
+      background-size: 28.28px 28.28px, 100% 100%;
+      background-repeat: repeat, no-repeat;
+      // 拟物化效果
+      /** 拟物化效果 
     box-shadow: 
       inset 0 2px 4px rgba(251, 247, 223, 0.4),
       inset 0 -2px 4px rgba(0, 0, 0, 0.3),
       0 0 10px rgba(255, 215, 0, 0.2);*/
 
-    transition: width 0.2s ease;
-    z-index: 1;
+      transition: width 0.2s ease;
+      z-index: 1;
+    }
+  }
+
+  &-text {
+    position: relative;
+    z-index: 2;
+    font-size: 16px;
+    font-family: "DingTalk JinBuTi";
+    color: transparent;
+    padding-left: 12px;
+    white-space: nowrap;
+    font-weight: 900;
+    background: linear-gradient(135deg,
+        #a0a0a0 0%,
+        #d4d4d4 25%,
+        #ffffff 50%,
+        #d4d4d4 75%,
+        #a0a0a0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.9));
   }
 
   // 滚动文本容器样式
-  &-scrolling-text {
-    font-size: 20px;
-    font-family: "DingTalk JinBuTi";
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 900;
+  &-scrolling {
+    &-wrapper {
+      z-index: 0;
+      margin-bottom: -6px;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    &-text {
+      font-size: 20px;
+      font-family: "DingTalk JinBuTi";
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 900;
+    }
   }
 
   // 竖排文字特效
