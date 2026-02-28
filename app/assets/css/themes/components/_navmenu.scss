@@ -1,4 +1,4 @@
-@use '../mixins/decorators'as decorators;
+@use "../mixins"as HorizonMixins;
 
 // 定义常用变量
 $transition-timing: cubic-bezier(0.23, 1, 0.32, 1);
@@ -30,10 +30,9 @@ $responsive-breakpoint: 6rem;
 
         &-desktop {
             @extend .horizon-navSection;
+            @include HorizonMixins.viewport-viewport-height(100);
             flex-direction: column;
         }
-
-        min-height: 100vh;
     }
 
     &-navUtils {
@@ -49,7 +48,7 @@ $responsive-breakpoint: 6rem;
                 border: none;
                 padding: 0.5rem 0.1rem;
                 transition: transform 0.4s $transition-timing;
-                @include decorators.svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
+                @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
 
                 &:hover {
                     background-color: rgb(33, 33, 33);
@@ -83,7 +82,7 @@ $responsive-breakpoint: 6rem;
 // ==================== Widget 容器 ====================
 .horizon-widget {
     &-container {
-        @include decorators.svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
+        @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
         background-color: var(--horizon-nav-background-color-black-rgba);
         margin: 0.4rem;
         padding: 0.5rem;
@@ -95,7 +94,7 @@ $responsive-breakpoint: 6rem;
         justify-content: center;
         align-items: center;
 
-        @include decorators.responsive-flex-layout($responsive-breakpoint);
+        @include HorizonMixins.decorator-responsive-flex-layout($responsive-breakpoint);
     }
 
     &-button {
@@ -186,8 +185,8 @@ $responsive-breakpoint: 6rem;
     margin: 0.5rem 0;
     cursor: pointer;
     transition: transform 0.4s $transition-timing, opacity 0.4s $transition-timing;
-    @include decorators.svg-background-overlay($opacity: 0.8, $z-index: -1, $image-url: '/assets/imgs/res/contour_map.svg', $size: 200px);
-    @include decorators.decorative-bar(right, 0.2rem);
+    @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.8, $z-index: -1, $image-url: '/assets/imgs/res/contour_map.svg', $size: 200px);
+    @include HorizonMixins.decorator-decorative-bar(right, 0.2rem);
 
     &::after {
         right: 0.5rem;
@@ -238,6 +237,7 @@ $responsive-breakpoint: 6rem;
 
 // ==================== 触摸设备适配 ====================
 .horizon-navSectionContainer.input-type-touch {
+
     // 禁用 hover，避免状态卡住
     .horizon-navMenuItem,
     .horizon-widget-button {

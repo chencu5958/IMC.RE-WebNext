@@ -59,7 +59,7 @@ const handleTouch = (e: PointerEvent) => {
 
     // 检查点击的目标是否是特定按钮（展开按钮、hover开关等）
     const target = e.target as HTMLElement
-    const isButtonClick = target.closest('.expand-btn') 
+    const isButtonClick = target.closest('.expand-btn')
 
     // 如果不是点击这些按钮，才设置强制展开
     if (!isButtonClick) {
@@ -166,7 +166,7 @@ const handleTouch = (e: PointerEvent) => {
 </template>
 
 <style lang="scss" scoped>
-@use "~/assets/css/themes/mixins/decorators" as decorators;
+@use "~/assets/css/themes/mixins" as HorizonMixins;
 
 .test {
     background-color: #fff;
@@ -212,14 +212,14 @@ const handleTouch = (e: PointerEvent) => {
 // 桌面端占位符 - 固定宽度
 .desktop-nav-placeholder {
     width: 5rem; // 始终保持基础宽度
-    min-height: 100vh;
+    @include HorizonMixins.viewport-viewport-height(100); // 自动处理兼容性
 }
 
 
 .desktop-nav {
     width: 5rem;
     background: var(--horizon-nav-desktop-background-color);
-    min-height: 100vh;
+    @include HorizonMixins.viewport-viewport-height(100); // 自动处理兼容性
     position: fixed;
     left: 0;
     top: 0;
@@ -260,7 +260,7 @@ const handleTouch = (e: PointerEvent) => {
         white-space: nowrap;
         overflow: hidden;
         transition: padding 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        height: 100vh; // 确保容器占满视口高度
+        //height: 100vh; // 确保容器占满视口高度
         display: flex;
         flex-direction: column;
     }
