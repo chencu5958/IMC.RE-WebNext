@@ -31,16 +31,18 @@
     "@nuxtjs/sitemap": "^7.6.0",
     "@pinia/nuxt": "0.11.3",
     "@primeuix/themes": "^2.0.3",
-    "@unocss/nuxt": "66.6.0",
+    "@unocss/nuxt": "^66.6.2",
     "animejs": "^4.3.6",
+    "dotenv": "^17.3.1",
     "nuxt": "^4.3.1",
     "pinia": "^3.0.4",
     "primevue": "^4.5.4"
   },
   "devDependencies": {
+    "@nuxt/devtools": "^3.2.2",
     "@nuxtjs/eslint-module": "4.1.0",
     "@primevue/nuxt-module": "4.5.4",
-    "@types/node": "^25.3.0",
+    "@types/node": "^25.3.3",
     "sass": "^1.97.3"
   }
 }

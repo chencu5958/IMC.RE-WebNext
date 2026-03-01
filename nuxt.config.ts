@@ -1,6 +1,11 @@
+import dotenv from 'dotenv';
 import { createRuntimeConfig } from './utils/runtime';
 import { HorzionTheme } from './app/config/themes/horizon';
-import { preset } from 'node:process';
+
+// 自动检测并加载 env 目录下的环境变量文件
+dotenv.config({ 
+  path: `${process.cwd()}/env/.env.${process.env.NODE_ENV || 'development'}`
+})
 
 const runtimeConfig = createRuntimeConfig();
 const runtimeInfo = runtimeConfig.runtimeConfig.public;

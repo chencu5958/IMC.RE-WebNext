@@ -9,7 +9,7 @@ const navigationStore = useNavigationStore()
 const { width, height, currentBreakpoint } = useMediaQuery()
 
 // 使用 storeToRefs 保持所有属性的响应性
-const { devMode, forceMobile, forceDesktop, isMobileView } = storeToRefs(navigationStore)
+const { devMode, forceMobile, forceDesktop, isMobileView, isAnimating } = storeToRefs(navigationStore)
 
 // 控制展开状态
 const isAlwaysExpanded = ref(false) // 按钮控制的始终展开状态（优先级最高）
@@ -26,6 +26,11 @@ const isExpanded = computed(() => isAlwaysExpanded.value || (isHoverEnabled.valu
 const handlePointerDown = (e: PointerEvent) => {
     inputType.value = e.pointerType as 'mouse' | 'touch' | 'pen'
 }
+
+// 暴露给父组件使用的状态
+defineExpose({
+    isExpanded
+})
 
 // 计算 widgetpop 的定位样式
 const widgetPopStyle = computed(() => {
@@ -62,37 +67,32 @@ const handleTouch = (e: PointerEvent) => {
     }
 }
 
-// 动画定时器
-const animationTimer = ref<ReturnType<typeof setTimeout> | null>(null)
+// 存储动画定时器，防止快速切换时状态混乱
+let animationTimer: ReturnType<typeof setTimeout> | null = null
 
-// 监听视图变化，控制导航动画状态
+// 监听视图变化，控制动画状态
 watch(isMobileView, (newVal, oldVal) => {
     if (newVal !== oldVal) {
         // 清除之前的定时器
-        if (animationTimer.value) {
-            clearTimeout(animationTimer.value)
+        if (animationTimer) {
+            clearTimeout(animationTimer)
         }
 
-        // 通过 store 设置动画状态
-        navigationStore.setNavAnimating(true)
+        // 开始动画
+        navigationStore.isAnimating = true
 
         // 动画时长（与 CSS 过渡时长一致）
-        animationTimer.value = setTimeout(() => {
-            navigationStore.setNavAnimating(false)
-            animationTimer.value = null
-        }, 400)
+        animationTimer = setTimeout(() => {
+            navigationStore.isAnimating = false
+            animationTimer = null
+        }, 4000)
     }
-})
-
-// 暴露状态给父组件
-defineExpose({
-    isExpanded
 })
 
 // 组件卸载时清除定时器
 onUnmounted(() => {
-    if (animationTimer.value) {
-        clearTimeout(animationTimer.value)
+    if (animationTimer) {
+        clearTimeout(animationTimer)
     }
 })
 </script>
