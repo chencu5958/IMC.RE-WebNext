@@ -4,6 +4,8 @@
 $transition-timing: cubic-bezier(0.23, 1, 0.32, 1);
 $widget-spacing: 0.25rem;
 $responsive-breakpoint: 6rem;
+$contour-map-url: '@/assets/imgs/res/contour_map.svg';
+$svg-overlay-size: 240px;
 
 // ==================== 基础布局 ====================
 .horizon {
@@ -48,7 +50,7 @@ $responsive-breakpoint: 6rem;
                 border: none;
                 padding: 0.5rem 0.1rem;
                 transition: transform 0.4s $transition-timing;
-                @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
+                @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: $contour-map-url, $size: $svg-overlay-size);
 
                 &:hover {
                     background-color: rgb(33, 33, 33);
@@ -82,7 +84,7 @@ $responsive-breakpoint: 6rem;
 // ==================== Widget 容器 ====================
 .horizon-widget {
     &-container {
-        @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: '/assets/imgs/res/contour_map.svg', $size: 240px);
+        @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.5, $z-index: 0, $image-url: $contour-map-url, $size: $svg-overlay-size);
         background-color: var(--horizon-nav-background-color-black-rgba);
         margin: 0.4rem;
         padding: 0.5rem;
@@ -185,7 +187,7 @@ $responsive-breakpoint: 6rem;
     margin: 0.5rem 0;
     cursor: pointer;
     transition: transform 0.4s $transition-timing, opacity 0.4s $transition-timing;
-    @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.8, $z-index: -1, $image-url: '/assets/imgs/res/contour_map.svg', $size: 200px);
+    @include HorizonMixins.decorator-svg-background-overlay($opacity: 0.8, $z-index: -1, $image-url: $contour-map-url, $size: $svg-overlay-size);
     @include HorizonMixins.decorator-decorative-bar(right, 0.2rem);
 
     &::after {

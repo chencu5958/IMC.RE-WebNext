@@ -116,7 +116,7 @@ onMounted(() => {
   }
   
   // 创建全局唯一音频实例
-  globalState.audio = new Audio('/assets/audio/铁痕电台-MSR,Kirara Magic - 春景故人来.mp3')
+  globalState.audio = new Audio('/static/audio/铁痕电台-MSR,Kirara Magic - 春景故人来.mp3')
   globalState.initialized = true
   audio.value = globalState.audio
   

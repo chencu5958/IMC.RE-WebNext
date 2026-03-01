@@ -22,7 +22,6 @@ const containerFlexDirection = computed(() => {
 <style lang="scss" scoped>
 .horizon-container {
     flex-direction: v-bind(containerFlexDirection);
-    transition: flex-direction 0.3s ease;
 }
 
 .content-wrapper {

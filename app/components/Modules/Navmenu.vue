@@ -105,7 +105,7 @@ const handleTouch = (e: PointerEvent) => {
                 @mouseenter="isHovered = true" @mouseleave="isHovered = false" @touchstart="handleTouch">
                 <div class="horizon-navSection-desktop">
                     <div class="horizon-navLogo">
-                        <img class="horizon-navLogo-img" src="/assets/imgs/common/logo1.svg" alt="Logo">
+                        <img class="horizon-navLogo-img" src="@/assets/imgs/common/logo.svg" alt="Logo">
                     </div>
                     <div class="nav-content-wrapper">
                         <div class="nav-item-container">
@@ -241,7 +241,7 @@ const handleTouch = (e: PointerEvent) => {
         left: 0;
         right: 0; // 拉伸到右侧
         bottom: 0; // 拉伸到底部
-        background-image: url('/assets/imgs/res/endless_mask.svg');
+        background-image: url('@/assets/imgs/res/endless_mask.svg');
         background-size: 120px; // 启用拉伸填充
         background-repeat: no-repeat;
         opacity: 0.5; // 收回时的透明度
