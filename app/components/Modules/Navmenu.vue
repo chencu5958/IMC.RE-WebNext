@@ -2,6 +2,11 @@
 import { storeToRefs } from 'pinia'
 import ScrollingText from './ScrollingText.vue'
 
+// 导航 data 属性常量 - 集中管理自定义 data 属性
+const NavDataActions = {
+    DesktopExpand: 'desktop-nav-expand',
+} as const
+
 // 使用导航状态 store
 const navigationStore = useNavigationStore()
 
@@ -51,12 +56,9 @@ const toggleForceDesktop = () => navigationStore.toggleForceDesktop()
 // 触摸处理 - 触摸时强制展开
 const handleTouch = (e: PointerEvent) => {
     inputType.value = 'touch'
-
-    // 检查点击的目标是否是特定按钮（展开按钮、hover开关等）
     const target = e.target as HTMLElement
-    const isButtonClick = target.closest('.expand-btn')
+    const isButtonClick = target.closest(`[data-action="${NavDataActions.DesktopExpand}"]`)
 
-    // 如果不是点击这些按钮，才设置强制展开
     if (!isButtonClick) {
         isAlwaysExpanded.value = true
     }
@@ -125,7 +127,14 @@ onUnmounted(() => {
                 <!-- 移动端导航 -->
                 <div v-if="isMobileView" key="mobile" class="mobile-nav-wrapper">
                     <div class="mobile-nav">
-                        Mobile Nav
+                        <div class="horizon-navSection-mobile">
+                            <div>
+                                123456
+                            </div>
+                            <div>
+                                123
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -181,7 +190,8 @@ onUnmounted(() => {
                                         <WidgetMusicPlayer use-widget-style />
                                     </div>
                                 </div>
-                                <button @click="toggleExpand" class="horizon-navUtils-desktop-scaleSwitcher expand-btn">
+                                <button @click="toggleExpand" :data-action="NavDataActions.DesktopExpand"
+                                    class="horizon-navUtils-desktop-scaleSwitcher">
                                     <Icon class="horizon-navUtils-desktop-scaleSwitcher-icon" v-if="!isExpanded"
                                         name="tdesign:component-breadcrumb" />
                                     <Icon class="horizon-navUtils-desktop-scaleSwitcher-icon"
@@ -510,17 +520,5 @@ onUnmounted(() => {
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     min-width: 200px;
     transition: left 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.expand-btn {
-
-    // 滚动文本样式 - 直接在scoped样式中定义
-    :global(.nav-scrolling-text) {
-        font-size: 0.9rem;
-        font-weight: bold;
-        color: rgba(255, 255, 255, 0.3);
-        opacity: 0.6;
-    }
-
 }
 </style>

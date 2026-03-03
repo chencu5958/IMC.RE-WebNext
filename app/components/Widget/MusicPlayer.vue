@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useClientStorage } from '~/composables/useClientStorage'
+
 // 全局音频状态
 const globalState = (() => {
   if (typeof window !== 'undefined') {
@@ -18,26 +20,18 @@ const globalState = (() => {
   }
 })()
 
-// 播放状态键名
+// 使用统一的存储 Hook
 const PLAYBACK_STATE_KEY = 'music-player-state'
+const storage = useClientStorage()
 
-// 从localStorage获取播放状态
+// 从 localStorage 获取播放状态
 const getPlaybackState = () => {
-  if (typeof localStorage === 'undefined') return null
-  try {
-    const state = localStorage.getItem(PLAYBACK_STATE_KEY)
-    return state ? JSON.parse(state) : null
-  } catch {
-    return null
-  }
+  return storage.local.get<{ isPlaying: boolean; currentTime: number }>(PLAYBACK_STATE_KEY)
 }
 
-// 保存播放状态到localStorage
+// 保存播放状态到 localStorage
 const savePlaybackState = (state: { isPlaying: boolean; currentTime: number }) => {
-  if (typeof localStorage === 'undefined') return
-  try {
-    localStorage.setItem(PLAYBACK_STATE_KEY, JSON.stringify(state))
-  } catch {}
+  storage.local.set(PLAYBACK_STATE_KEY, state)
 }
 
 // Widget配置
