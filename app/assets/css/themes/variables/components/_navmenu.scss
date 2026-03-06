@@ -1,10 +1,26 @@
 :root {
-    --horizon-nav-desktop-background-color: var(--horizon-color-yellow-400);
+    // ==================== 全局变量 ====================
     --horizon-nav-background-color-black: #222222;
     --horizon-nav-background-color-white: #ffffff;
     --horizon-nav-background-color-black-rgba: rgba(0, 0, 0, 0.5);
     --horizon-nav-hover-color: #000;
     --horizon-nav-hover-color-white-rgba: rgba(255, 255, 255, 0.3);
+
+    --horizon-nav-svg-overlay-size: 240px;
+    --horizon-nav-contour-map-url: '@/assets/imgs/res/contour_map.svg';
+    --horizon-nav-transition-timing: cubic-bezier(0.23, 1, 0.32, 1);
+    // ==================== 桌面端变量 ====================
+    --horizon-nav-desktop-background-color: var(--horizon-color-yellow-400);
+    --horizon-nav-desktop-logo-size: 4rem;
     --horizon-nav-desktop-min-width: 5rem;
     --horizon-nav-desktop-max-width: 12rem;
+    // ==================== 移动端变量 ====================
+    --horizon-nav-mobile-background-color: var(--horizon-color-yellow-400);
+    --horizon-nav-mobile-logo-size: 2.5rem;
+    --horizon-nav-mobile-bar-height: 3.5rem;
+}
+
+:root[class="dark"] {
+    --horizon-nav-desktop-background-color: var(--horizon-color-yellow-400);
+    --horizon-nav-mobile-background-color: var(--horizon-color-yellow-400);
 }

@@ -300,6 +300,7 @@ onUnmounted(() => {
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
+  line-height: 1;
 }
 
 .scrolling-text-container {

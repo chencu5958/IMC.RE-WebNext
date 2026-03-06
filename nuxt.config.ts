@@ -3,7 +3,7 @@ import { createRuntimeConfig } from './utils/runtime';
 import { HorzionTheme } from './app/config/themes/horizon';
 
 // 自动检测并加载 env 目录下的环境变量文件
-dotenv.config({ 
+dotenv.config({
   path: `${process.cwd()}/env/.env.${process.env.NODE_ENV || 'development'}`
 })
 
@@ -14,6 +14,10 @@ const runtimeInfo = runtimeConfig.runtimeConfig.public;
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  future: {
+    multiApp: true,
+    compatibilityVersion: 5
+  },
   // App配置
   app: {
     head: {
@@ -73,6 +77,11 @@ export default defineNuxtConfig({
       { code: 'zh-Hant', language: 'zh-Hant', file: 'zh-Hant.yml' },
       { code: 'en-US', language: 'en-US', file: 'en-US.yml' }
     ]
+  },
+
+  // Experimental功能配置
+  experimental: {
+    payloadExtraction: true,
   },
 
   // Color Mode配置
