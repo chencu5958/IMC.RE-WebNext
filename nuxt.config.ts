@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { createRuntimeConfig } from './utils/runtime';
-import { HorzionTheme } from './app/config/themes/horizon';
 
 // 自动检测并加载 env 目录下的环境变量文件
 dotenv.config({
@@ -95,20 +94,6 @@ export default defineNuxtConfig({
     storageKey: 'horizon-color-preference'
   },
 
-  // PrimeVue配置
-  primevue: {
-    autoImport: false,
-    options: {
-      theme: {
-        preset: HorzionTheme,
-        options: {
-          prefix: 'p-',
-          darkModeSelector: '.dark'
-        }
-      }
-    }
-  },
-
   // Modules模块
   modules: [
     '@nuxt/icon',
@@ -118,7 +103,6 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
-    //'@primevue/nuxt-module',
     '@unocss/nuxt'
   ],
 
