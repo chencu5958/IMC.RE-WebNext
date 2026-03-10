@@ -1,6 +1,9 @@
 // Components Styles Index
 // 组件样式入口文件
-
 @forward './loading';
-@forward './button';
 @forward './navmenu';
+@forward './error';
+
+// UI Components Styles Index
+// UI组件样式入口文件
+@forward './ui';

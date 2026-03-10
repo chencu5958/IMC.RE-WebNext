@@ -1,0 +1,31 @@
+@use "../mixins"as HorizonMixins;
+
+.horizon {
+    &-error {
+        &-background {
+            position: relative;
+            background: linear-gradient(135deg, var(--horizon-color-stone-700) 0%, var(--horizon-color-stone-900) 100%);
+            background-size: 200% 200%;
+            animation: horizon-error-fluid 15s ease infinite;
+            @include HorizonMixins.decorator-svg-background-overlay(0.1, 0, '@/assets/imgs/res/arrow_layer_mask.svg', 75px);
+        }
+    }
+}
+
+@keyframes horizon-error-fluid {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 100% 50%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    75% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

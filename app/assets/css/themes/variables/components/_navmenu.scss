@@ -7,7 +7,7 @@
     --horizon-nav-hover-color-white-rgba: rgba(255, 255, 255, 0.3);
 
     --horizon-nav-svg-overlay-size: 240px;
-    --horizon-nav-contour-map-url: '@/assets/imgs/res/contour_map.svg';
+    --horizon-nav-contour-map-url: url('@/assets/imgs/res/contour_map.svg');
     --horizon-nav-transition-timing: cubic-bezier(0.23, 1, 0.32, 1);
     // ==================== 桌面端变量 ====================
     --horizon-nav-desktop-background-color: var(--horizon-color-yellow-400);
