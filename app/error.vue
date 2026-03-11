@@ -1,6 +1,38 @@
 <script lang="ts" setup>
 import LayoutNav from '~/components/Layout/LayoutNav.vue';
 import ScrollingText from '~/components/Modules/ScrollingText.vue'
+import type { NuxtError } from '#app'
+import { horizonErrorConfig, horizonErrorDefaultConfig, horizonServerErrorDefaultConfig } from '~/config/web/common/horizonErrorConfig'
+
+const props = defineProps<{ error: NuxtError }>()
+
+const getErrorInfo = (error: NuxtError) => {
+    const { status, message } = error
+    const errorPath = (error.data as any)?.path || ''
+
+    const isServerError = status && status >= 500
+    const config = horizonErrorConfig[status as number] || (isServerError ? horizonServerErrorDefaultConfig : horizonErrorDefaultConfig)
+
+    return {
+        title: `${status}`,
+        description: $t(config.descriptionKey, [errorPath || message || '']),
+        path: errorPath,
+        action: config.action
+    }
+}
+
+const errorInfo = computed(() => getErrorInfo(props.error))
+
+const handleAction = () => {
+    const action = errorInfo.value?.action
+    if (action?.type === 'action') {
+        if (action.value === 'refresh') {
+            location.reload()
+        } else if (action.value === 'back') {
+            history.back()
+        }
+    }
+}
 </script>
 
 <template>
@@ -8,32 +40,37 @@ import ScrollingText from '~/components/Modules/ScrollingText.vue'
         <div class="horizon-section-container horizon-error-background">
             <div class="horizon-error-layout">
                 <div class="horizon-section-container">
-                    <div class="horizon-error-title">404</div>
+                    <div class="horizon-error-title">{{ errorInfo?.title }}</div>
                     <div class="horizon-error-content">
                         <div class="horizon-error-content-title">
-                            Oops，你在找到页面也许走丢了哦 :(
+                            {{ errorInfo?.description }}
                         </div>
                         <div class="horizon-error-nav">
-                            <div class="horizon-error-nav-item">
-                                <div class="horizon-error-nav-item-text">
-                                    <a href="/">首页</a>
-                                </div>
-                            </div>
+                            <button class="horizon-error-nav-item" v-if="errorInfo?.action.type === 'action'" @click="handleAction">
+                                {{ $t(errorInfo?.action.text || '') }}
+                            </button>
+                            <NuxtLink class="horizon-error-nav-item" v-else :to="errorInfo?.action.value || '/'">
+                                {{ $t(errorInfo?.action.text || '') }}
+                            </NuxtLink>
                         </div>
                         <div class="horizon-error-copyright">
-                            <NuxtLink class="horizon-error-copyright-text no-underline" to="/privacy-policy">© IMC.RE
+                            <NuxtLink class="horizon-error-copyright-text no-underline" to="/">
+                                {{ $t('i18n-common-string.info.copyright') }}
                             </NuxtLink>
                             <NuxtLink class="horizon-error-copyright-text no-underline" target="_blank"
-                                to="https://beian.miit.gov.cn/">京ICP备0000000000号-1</NuxtLink>
+                                to="https://beian.miit.gov.cn/">
+                                {{ $t('i18n-common-string.info.icp-filing') }}
+                            </NuxtLink>
                             <NuxtLink class="horizon-error-copyright-text no-underline" target="_blank"
-                                to="https://beian.mps.gov.cn/">京公网安备00000000000000号</NuxtLink>
+                                to="https://beian.mps.gov.cn/">{{
+                                    $t('i18n-common-string.info.icp-public-security-filing') }}
+                            </NuxtLink>
                         </div>
                     </div>
                 </div>
                 <div class="horizon-error-decorator">
                     <ScrollingText text="ACCESS DENIED" separator=" // " :enable-word-split="false" :speed="30"
                         text-class="horizon-error-scrolling-text" class="horizon-error-mask-text" />
-
                 </div>
             </div>
             <div class="horizon-error-vertical-text">
@@ -96,6 +133,8 @@ import ScrollingText from '~/components/Modules/ScrollingText.vue'
 
     &-nav {
         padding: 1rem 0;
+        display: flex;
+        flex-direction: row;
 
         &-item {
             width: fit-content;
@@ -156,37 +195,7 @@ import ScrollingText from '~/components/Modules/ScrollingText.vue'
     }
 
     &-vertical-text {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 2rem;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding-top: 1rem;
-        z-index: 0;
-        pointer-events: none;
-        user-select: none;
-
-        span {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            font-size: clamp(0.75rem, 2vw, 1rem);
-            font-weight: bold;
-            letter-spacing: 0.5em;
-
-            &.bracket {
-                color: var(--horizon-color-yellow-400);
-                padding-bottom: 0.5em;
-            }
-
-            &.text {
-                color: white;
-                padding: 0.5em 0;
-            }
-        }
+        @include HorizonMixins.vertical-text-vertical-text();
     }
 }
 </style>

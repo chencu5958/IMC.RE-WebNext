@@ -2,9 +2,9 @@
 const route = useRoute()
 const { t } = useI18n()
 const head = useLocaleHead()
-const keyBrand = 'rmc-common-string.info.brand-full'
-const keyDesc = 'rmc-common-string.uni.web-desc'
-const keyKeywords = 'rmc-common-string.uni.web-keywords'
+const keyBrand = 'i18n-common-string.info.brand-full'
+const keyDesc = 'i18n-common-string.uni.web-desc'
+const keyKeywords = 'i18n-common-string.uni.web-keywords'
 
 // 添加错误处理
 const getTitle = () => {

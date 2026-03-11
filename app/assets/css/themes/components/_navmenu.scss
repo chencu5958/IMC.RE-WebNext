@@ -150,6 +150,32 @@ $nav-transition-duration: 0.4s;
             opacity: 1;
             transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
+
+        .menubar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1;
+        }
+
+        .menu-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            cursor: pointer;
+            color: var(--horizon-high-contrast-text-color);
+            transition: transform 0.3s ease;
+
+            &:active {
+                transform: scale(0.95);
+            }
+
+            .icon {
+                font-size: 1.5rem;
+            }
+        }
     }
 
     &.h5menu {
@@ -157,8 +183,43 @@ $nav-transition-duration: 0.4s;
         top: 0;
         left: 0;
         width: 100%;
-        @include HorizonMixins.viewport-viewport-height(85);
+        height: 0;
+        overflow: hidden;
         background-color: var(--horizon-nav-background-color-black);
+        transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+
+        &.expanded {
+            height: calc(100vh - var(--horizon-nav-mobile-bar-height));
+            top: var(--horizon-nav-mobile-bar-height);
+        }
+
+        &-content {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 1rem;
+        }
+
+        &-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .menu-icon {
+                font-size: 1.5rem;
+            }
+        }
 
         &-mask-text {
             position: absolute;

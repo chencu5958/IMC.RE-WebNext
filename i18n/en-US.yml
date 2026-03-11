@@ -1,6 +1,25 @@
-rmc-common-string:
+i18n-common-string:
+  lang:
+    name: "English"
+    code: "en-US"
   info:
+    icp-filing: "京ICP备0000000000号-1"
+    icp-public-security-filing: "京公网安备 00000000000000号"
+    brand: "IMC.RE"
     brand-full: "IMC.RE - Official Website"
+    copyright: "© IMC.RE"
   uni:
     web-desc: "IMC.RE Official Website - Providing latest product information and services"
     web-keywords: "IMC, IMC.RE, official website, products, services"
+    web-loading: "Loading - {0}%"
+    web-loading-desc: "少女祈祷中"
+  error:
+    client-error: "Client Request Error {0}"
+    server-error: "Server Error {0}"
+    400-desc: "Request parameter error {0}"
+    401-desc: "You need to log in first to access {0}"
+    403-desc: "You do not have permission to access {0}"
+    404-desc: "Oops, the page you are looking for {0} might have been lost :("
+    500-desc: "Oops, server error :("
+    502-desc: "Oops, server denied request :("
+    503-desc: "Oops, server temporarily unavailable :("

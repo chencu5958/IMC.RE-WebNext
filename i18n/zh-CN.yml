@@ -1,6 +1,32 @@
-rmc-common-string:
+i18n-common-string:
+  lang:
+    name: "简体中文"
+    code: "zh-CN"
   info:
+    icp-filing: "京ICP备0000000000号-1"
+    icp-public-security-filing: "京公网安备 00000000000000号"
+    brand: "IMC.RE"
     brand-full: "IMC.RE - 官方网站"
+    copyright: "© IMC.RE"
   uni:
-    web-desc: "IMC.RE 官方网站 - 提供最新的产品信息和服务"
-    web-keywords: "IMC, IMC.RE, 官方网站, 产品, 服务"
+    web-desc: "IMC.RE"
+    web-keywords: "IMC, IMC.RE"
+    web-loading: "加载中 - {0}%"
+    web-loading-desc: "少女祈祷中"
+    home: "首页"
+    back: "返回"
+    refresh: "刷新页面"
+  auth:
+    login: "登录"
+    logout: "退出登录"
+  error:
+    client-error: "客户端请求错误 {0}"
+    server-error: "服务器错误 {0}"
+    400-desc: "请求参数错误 {0}"
+    401-desc: "您需要先登录才能访问 {0}"
+    403-desc: "您没有权限访问 {0}"
+    404-desc: "Oops，你在找的页面 {0} 也许走丢了哦 :("
+    500-desc: "Oops，服务器出错了 :("
+    502-desc: "Oops，服务器拒绝了请求 :("
+    503-desc: "Oops，服务器暂时不可用 :("
+i18n-web-string:

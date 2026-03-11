@@ -17,6 +17,9 @@ const isAlwaysExpanded = ref(false) // 按钮控制的始终展开状态（优�
 const isHoverEnabled = ref(true) // 是否启用 hover 展开功能
 const isHovered = ref(false) // hover 状态
 
+// 移动端菜单展开状态
+const isMobileMenuExpanded = ref(false)
+
 // 检测输入类型（鼠标/触摸）
 const inputType = ref<'mouse' | 'touch' | 'pen'>('mouse')
 
@@ -43,6 +46,10 @@ const widgetPopStyle = computed(() => {
 // 切换展开状态
 const toggleExpand = () => {
     isAlwaysExpanded.value = !isAlwaysExpanded.value
+}
+
+const toggleMobileMenu = () => {
+    isMobileMenuExpanded.value = !isMobileMenuExpanded.value
 }
 
 // 调试控制函数（使用 store 的方法）
@@ -119,29 +126,42 @@ onUnmounted(() => {
 
 
         <ClientOnly>
-            <Transition name="horizon-nav-transition" mode="out-in"> 
-                <div v-if="isMobileView" key="mobile" class="horizon-nav-wrapper-mobile">
+            <Transition name="horizon-nav-transition" mode="out-in">
+                <div v-if="isMobileView" key="mobile" class="horizon-nav-wrapper-mobile" :class="{ 'menu-expanded': isMobileMenuExpanded }">
                     <div class="horizon-nav-mobile horizon-nav-wrapper-mobile">
                         <div class="horizon-navSection-mobile menubar">
                             <div class="horizon-navLogo-mobile">
                                 <img class="horizon-navLogo-img" src="@/assets/imgs/common/logo.svg" alt="Logo">
                             </div>
-                            <div>
-                                123
+                            <div class="menubar-actions">
+                                <div class="menu-toggle" @click="toggleMobileMenu">
+                                    <Icon :name="isMobileMenuExpanded ? 'tdesign:menu' : 'tdesign:menu'" />
+                                </div>
                             </div>
                         </div>
-                        <!--
-                        <div class="horizon-navSection-mobile h5menu">
-                            <div>
-                                123456
-                            </div>
-                            <div>
-                                123
+                        <div class="horizon-navSection-mobile h5menu" :class="{ 'expanded': isMobileMenuExpanded }">
+                            <div class="h5menu-content">
+                                <div class="h5menu-item">
+                                    <Icon class="menu-icon" name="tdesign:home" />
+                                    <span>Home</span>
+                                </div>
+                                <div class="h5menu-item">
+                                    <Icon class="menu-icon" name="tdesign:system-components" />
+                                    <span>About US</span>
+                                </div>
+                                <div class="h5menu-item">
+                                    <Icon class="menu-icon" name="tdesign:shrimp" />
+                                    <span>Community</span>
+                                </div>
+                                <div class="h5menu-item">
+                                    <Icon class="menu-icon" name="tdesign:folder-open" />
+                                    <span>Blog</span>
+                                </div>
                             </div>
                             <ScrollingText text="OVER THE FRONTIER" separator=" // " :enable-word-split="false"
                                 :speed="30" text-class="horizon-navSection-mobile h5menu-scrolling-text"
                                 class="horizon-navSection-mobile h5menu-mask-text" />
-                        </div>-->
+                        </div>
                     </div>
                 </div>
 
