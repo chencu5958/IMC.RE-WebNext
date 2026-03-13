@@ -106,6 +106,12 @@ export default defineNuxtConfig({
     '@unocss/nuxt'
   ],
 
+  runtimeConfig: {
+    public: {
+      horizon: runtimeInfo,
+    },
+  },
+
   // Nitro配置
   nitro: {
     minify: true,

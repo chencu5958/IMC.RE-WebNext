@@ -1,12 +1,10 @@
-import { loadEnv } from 'vite';
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-interface VITE_ENV_CONFIG {
-  VITE_APP_ENV: string
-  VITE_APP_TITLE: string
-  [key: string]: string
+interface RUNTIME_CONFIG {
+  HORIZON_SITE_ENV: string
+  [key: string]: string | undefined
 }
 
 // 使用环境变量控制日志输出，避免重复打印，只对白名单命令显示日志
@@ -39,19 +37,26 @@ export function createRuntimeConfig() {
     }
   }
 
-  const envData = loadEnv(envName, 'env') as unknown as VITE_ENV_CONFIG
+  const envData = process.env as unknown as RUNTIME_CONFIG
+
+  // 从环境变量获取 APP_ENV，如果没有则使用 envName
+  const appEnv = envData.HORIZON_SITE_ENV || envName.toUpperCase()
 
   // 获取 package.json 版本信息
   let packageVersion = '0.0.0-Unknown';
+  let packageName = 'Unknown';
   try {
     const packageJsonPath = join(process.cwd(), 'package.json');
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
     packageVersion = packageJson.version || '0.0.0-Unknown';
+    packageName = packageJson.name || 'Unknown';
     if (shouldLog) {
       console.log(`✅ Package 版本获取成功: ${packageVersion}`);
+      console.log(`✅ Package 名称获取成功: ${packageName}`);
     }
   } catch (error) {
     console.warn('❌ 无法获取 Package 版本信息:', error);
+    console.warn('❌ 无法获取 Package 名称信息:', error);
   }
 
   // 获取 Git Hash 和分支信息
@@ -162,9 +167,10 @@ export function createRuntimeConfig() {
   const config = {
     runtimeConfig: {
       public: {
-        ...envData,
+        appEnv: appEnv,
         gitHash: gitHash,
         gitBranch: gitBranch,
+        packageName: packageName,
         packageVersion: packageVersion,
         buildId: buildId,
         buildTime: (() => {
