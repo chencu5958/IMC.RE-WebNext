@@ -17,7 +17,8 @@ const getErrorInfo = (error: NuxtError) => {
         title: `${status}`,
         description: $t(config.descriptionKey, [errorPath || message || '']),
         path: errorPath,
-        action: config.action
+        action: config.action,
+        titleKey: isServerError ? 'i18n-common-string.error.server-error' : 'i18n-common-string.error.client-error'
     }
 }
 
@@ -34,19 +35,21 @@ const handleAction = () => {
     }
 }
 
-const title = computed(() => {
-    const status = props.error.status
-    const isServerError = status && status >= 500
-    return $t(isServerError ? 'i18n-common-string.error.server-error' : 'i18n-common-string.error.client-error', [errorInfo.value.title])
-})
+const title = computed(() => $t(errorInfo.value?.titleKey, [errorInfo.value?.title || '']))
 const description = computed(() => errorInfo.value?.description)
 
-useHead({
-    title: title,
-    meta: [
-        { name: 'description', content: description },
-    ],
-});
+/**
+ * 等待页面加载完成后设置标题和描述
+ * Nuxt对error页面的useHead有BUG，只能这样处理
+ */
+setTimeout(() => {
+    useHead({
+        title: title,
+        meta: [
+            { name: 'description', content: description.value },
+        ],
+    });
+}, 0)
 </script>
 
 <template>
