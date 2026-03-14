@@ -33,6 +33,20 @@ const handleAction = () => {
         }
     }
 }
+
+const title = computed(() => {
+    const status = props.error.status
+    const isServerError = status && status >= 500
+    return $t(isServerError ? 'i18n-common-string.error.server-error' : 'i18n-common-string.error.client-error', [errorInfo.value.title])
+})
+const description = computed(() => errorInfo.value?.description)
+
+useHead({
+    title: title,
+    meta: [
+        { name: 'description', content: description },
+    ],
+});
 </script>
 
 <template>
@@ -46,7 +60,8 @@ const handleAction = () => {
                             {{ errorInfo?.description }}
                         </div>
                         <div class="horizon-error-nav">
-                            <button class="horizon-error-nav-item" v-if="errorInfo?.action.type === 'action'" @click="handleAction">
+                            <button class="horizon-error-nav-item" v-if="errorInfo?.action.type === 'action'"
+                                @click="handleAction">
                                 {{ $t(errorInfo?.action.text || '') }}
                             </button>
                             <NuxtLink class="horizon-error-nav-item" v-else :to="errorInfo?.action.value || '/'">
@@ -95,10 +110,10 @@ const handleAction = () => {
     }
 
     &-title {
-        font-family: "DingTalk JinBuTi";
-        font-size: clamp(6rem, 10vw, 10rem);
-        font-weight: bold;
-        color: rgba(255, 255, 255, 0.1);
+        font-family: var(--horizon-font-dingtalk);
+        font-size: var(--horizon-error-title-font-size);
+        font-weight: var(--horizon-error-title-font-weight);
+        color: var(--horizon-error-title-color);
     }
 
     &-copyright {
@@ -127,7 +142,13 @@ const handleAction = () => {
             font-size: clamp(0.8rem, 2vw, 1rem);
             //font-weight: bold;
             color: rgba(255, 255, 255, 0.5);
-            font-family: "DingTalk JinBuTi";
+            font-family: var(--horizon-font-dingtalk);
+
+            &:hover {
+                color: rgba(255, 255, 255, 0.8);
+                transition-duration: .3s;
+                cursor: pointer;
+            }
         }
     }
 
@@ -171,7 +192,7 @@ const handleAction = () => {
             font-size: clamp(2rem, 5vw, 2rem);
             font-weight: bold;
             color: rgba(255, 255, 255, 0.8);
-            font-family: "DingTalk JinBuTi";
+            font-family: var(--horizon-font-dingtalk);
             padding-bottom: 1rem;
             flex: 1;
 
@@ -205,7 +226,7 @@ const handleAction = () => {
     font-size: 3rem;
     font-weight: blod;
     color: rgba(174, 174, 174);
-    font-family: "DingTalk JinBuTi";
+    font-family: var(--horizon-font-dingtalk);
     opacity: 0.7;
 }
 </style>

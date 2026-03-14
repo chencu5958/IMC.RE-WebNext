@@ -13,7 +13,11 @@ i18n-common-string:
     web-keywords: "IMC, IMC.RE, official website, products, services"
     web-loading: "Loading - {0}%"
     web-loading-desc: "少女祈祷中"
+    home: "Home"
+    back: "Back"
+    refresh: "Refresh"
   error:
+    undefined-i18n-text: "Undefined I18n Text"
     client-error: "Client Request Error {0}"
     server-error: "Server Error {0}"
     400-desc: "Request parameter error {0}"

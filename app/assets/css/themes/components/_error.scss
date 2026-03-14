@@ -1,10 +1,11 @@
 @use "../mixins"as HorizonMixins;
 
+// 现阶段只把Background单独拎出来，剩下的都在error.vue内实现
 .horizon {
     &-error {
         &-background {
             position: relative;
-            background: linear-gradient(135deg, var(--horizon-color-stone-700) 0%, var(--horizon-color-stone-900) 100%);
+            background: var(--horizon-error-background-color);
             background-size: 200% 200%;
             animation: horizon-error-fluid 15s ease infinite;
             @include HorizonMixins.decorator-svg-background-overlay(0.1, 0, '@/assets/imgs/res/arrow_layer_mask.svg', 75px);
@@ -16,15 +17,19 @@
     0% {
         background-position: 0% 50%;
     }
+
     25% {
         background-position: 100% 50%;
     }
+
     50% {
         background-position: 100% 100%;
     }
+
     75% {
         background-position: 0% 100%;
     }
+
     100% {
         background-position: 0% 50%;
     }

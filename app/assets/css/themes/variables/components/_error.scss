@@ -1,0 +1,6 @@
+:root {
+    --horizon-error-background-color: linear-gradient(135deg, var(--horizon-color-stone-700) 0%, var(--horizon-color-stone-900) 100%);
+    --horizon-error-title-color: rgba(255, 255, 255, 0.1);
+    --horizon-error-title-font-size: clamp(6rem, 10vw, 10rem);
+    --horizon-error-title-font-weight: bold;
+}

@@ -13,7 +13,11 @@ i18n-common-string:
     web-keywords: "IMC, IMC.RE, 官方網站, 產品, 服務"
     web-loading: "加載中 - {0}%"
     web-loading-desc: "少女祈祷中"
+    home: "首頁"
+    back: "返回"
+    refresh: "刷新"
   error:
+    undefined-i18n-text: "未定義I18n文本"
     client-error: "客戶端請求錯誤 {0}"
     server-error: "服務器錯誤 {0}"
     400-desc: "請求參數錯誤 {0}"
