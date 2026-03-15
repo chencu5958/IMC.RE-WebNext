@@ -1,7 +1,7 @@
 export default defineNuxtPlugin(() => {
-    const runtimeConfig = useRuntimeConfig()
+  const runtimeConfig = useRuntimeConfig()
 
-    const styleTitle1 = `
+  const styleTitle1 = `
     font-size: 20px;
     font-weight: 600;
     font-family: 'Helvetica', monospace;
@@ -10,7 +10,7 @@ export default defineNuxtPlugin(() => {
     padding: 2px 2px 1px 10px; 
     background:rgb(255, 242, 0)
   `
-    const styleTitle2 = `
+  const styleTitle2 = `
     font-style: oblique;
     font-size:20px;
     font-weight: 400;
@@ -21,26 +21,40 @@ export default defineNuxtPlugin(() => {
     background: #212121
     `
 
-    const styleContent = `
+  const styleContent = `
     font-family: 'Helvetica';
     color: rgb(30,152,255);
     `
 
-    const styleCopyinfo = `
+  const styleCopyinfo = `
     font-family: 'Helvetica';
     color: #8b8b8b;
     `
-    const title1 = 'IMC.RE'
-    const title2 = 'SUS ඞ'
-    const content = `
+
+  // 检测开发环境
+  const isDev = process.env.NODE_ENV === 'development'
+
+  // 从runtimeConfig中获取数据
+  const siteVersion = runtimeConfig.public.horizon.packageVersion || 'Unknown Version'
+  const siteGitBranch = runtimeConfig.public.horizon.gitBranch || 'Unknown'
+  const siteGitCommit = runtimeConfig.public.horizon.gitHash || 'Unknown'
+  const siteBuildID = runtimeConfig.public.horizon.buildId || 'unknown'
+  const siteBuildTime = runtimeConfig.public.horizon.buildTime || 'Unknown build time'
+
+  const title1 = 'IMC.RE'
+  const title2 = 'SUS ඞ'
+  const content = `
     
     🏡 官网: https://www.imc.re
+    🔧 版本：${siteVersion} (${siteGitBranch}|${siteGitCommit}|${isDev ? 'DevBuild' : 'Prod'})
+    📅 构建时间：${siteBuildTime}
+    🔗 构建ID：${siteBuildID}
     `
 
-    const copyright = `
+  const copyright = `
     © 2022 - ${new Date().getFullYear()} IMC.RE
     Designed by RoidMC Studios
     `
 
-    console.log(`%c${title1} %c${title2} %c${content} %c${copyright}`, styleTitle1, styleTitle2, styleContent, styleCopyinfo)
+  console.log(`%c${title1} %c${title2} %c${content} %c${copyright}`, styleTitle1, styleTitle2, styleContent, styleCopyinfo)
 })
