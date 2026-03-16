@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import ScrollingText from './ScrollingText.vue'
+import NavMenuItem from './NavMenuItem.vue'
+import { horizonNavConfig } from '@/config/web/common/horizonNavConfig'
 
 const NavDataActions = {
     DesktopExpand: 'desktop-nav-expand',
 } as const
+
+// 导航菜单数据
+const menuItems = horizonNavConfig
 
 const navigationStore = useNavigationStore()
 const { width, height, currentBreakpoint } = useMediaQuery()
@@ -124,10 +129,10 @@ onUnmounted(() => {
             </div>
         </ClientOnly>
 
-
         <ClientOnly>
             <Transition name="horizon-nav-transition" mode="out-in">
-                <div v-if="isMobileView" key="mobile" class="horizon-nav-wrapper-mobile" :class="{ 'menu-expanded': isMobileMenuExpanded }">
+                <div v-if="isMobileView" key="mobile" class="horizon-nav-wrapper-mobile"
+                    :class="{ 'menu-expanded': isMobileMenuExpanded }">
                     <div class="horizon-nav-mobile horizon-nav-wrapper-mobile">
                         <div class="horizon-navSection-mobile menubar">
                             <div class="horizon-navLogo-mobile">
@@ -140,23 +145,18 @@ onUnmounted(() => {
                             </div>
                         </div>
                         <div class="horizon-navSection-mobile h5menu" :class="{ 'expanded': isMobileMenuExpanded }">
-                            <div class="h5menu-content">
-                                <div class="h5menu-item">
-                                    <Icon class="menu-icon" name="tdesign:home" />
-                                    <span>Home</span>
-                                </div>
-                                <div class="h5menu-item">
-                                    <Icon class="menu-icon" name="tdesign:system-components" />
-                                    <span>About US</span>
-                                </div>
-                                <div class="h5menu-item">
-                                    <Icon class="menu-icon" name="tdesign:shrimp" />
-                                    <span>Community</span>
-                                </div>
-                                <div class="h5menu-item">
-                                    <Icon class="menu-icon" name="tdesign:folder-open" />
-                                    <span>Blog</span>
-                                </div>
+                            <div class="h5menu-content" style="min-width: 20vw">
+                                <NavMenuItem
+                                    v-for="(item, index) in menuItems"
+                                    :key="index"
+                                    :icon="item.icon"
+                                    :label="item.label"
+                                    :href="item.href"
+                                    :sub-items="item.subItems"
+                                    :is-expanded="true"
+                                    :link-target="item.linkTarget"
+                                    mode="expand"
+                                />
                             </div>
                             <ScrollingText text="OVER THE FRONTIER" separator=" // " :enable-word-split="false"
                                 :speed="30" text-class="horizon-navSection-mobile h5menu-scrolling-text"
@@ -165,10 +165,10 @@ onUnmounted(() => {
                     </div>
                 </div>
 
-                <div v-else key="desktop" class="horizon-nav-wrapper-desktop"><!--
+                <div v-else key="desktop" class="horizon-nav-wrapper-desktop"><!---->
                     <div class="horizon-nav__popup horizon-widget-container" :style="widgetPopStyle">
                         User Account
-                    </div>-->
+                    </div>
                     <div class="horizon-nav-desktop"
                         :class="{ 'expanded': isExpanded, 'always-expanded': isAlwaysExpanded }"
                         @mouseenter="isHovered = true" @mouseleave="isHovered = false" @touchstart="handleTouch">
@@ -178,23 +178,18 @@ onUnmounted(() => {
                             </div>
                             <div class="horizon-nav__content">
                                 <div class="horizon-nav__items">
-                                    <div class="horizon-navMenuItem">
-                                        <Icon class="menu-icon" name="tdesign:home" />
-                                        <span v-if="isExpanded" class="menu-text">Home</span>
-                                    </div>
-                                    <div class="horizon-navMenuItem">
-                                        <Icon class="menu-icon" name="tdesign:system-components" />
-                                        <span v-if="isExpanded" class="menu-text">About US</span>
-                                    </div>
-                                    <div class="horizon-navMenuItem">
-                                        <Icon class="menu-icon" name="tdesign:shrimp" />
-                                        <span v-if="isExpanded" class="menu-text">Community</span>
-                                    </div>
-                                    <div class="horizon-navMenuItem">
-                                        <Icon class="menu-icon" name="tdesign:folder-open" />
-                                        <span v-if="isExpanded" class="menu-text">Blog</span>
-                                    </div>
-                                </div>
+                                <NavMenuItem
+                                    v-for="(item, index) in menuItems"
+                                    :key="index"
+                                    :icon="item.icon"
+                                    :label="$t(item.label)"
+                                    :href="item.href"
+                                    :sub-items="item.subItems"
+                                    :is-expanded="isExpanded"
+                                    :link-target="item.linkTarget"
+                                    :mode="'float'"
+                                />
+                            </div>
                                 <div class="horizon-nav__widgets">
                                     <div class="horizon-widget-container">
                                         <div class="horizon-widget-button">

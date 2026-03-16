@@ -27,3 +27,10 @@ i18n-common-string:
     500-desc: "Oops，服務器出錯了 :("
     502-desc: "Oops，服務器拒絕了請求 :("
     503-desc: "Oops，服務器暫時不可用 :("
+i18n-web-string:
+  nav:
+    home: "首頁"
+    about-us: "關於我們"
+    community: "社區"
+    terms: "服務條款"
+    blog: "博客"

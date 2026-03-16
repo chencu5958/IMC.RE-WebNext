@@ -32,3 +32,9 @@ i18n-common-string:
     502-desc: "Oops，服务器拒绝了请求 :("
     503-desc: "Oops，服务器暂时不可用 :("
 i18n-web-string:
+  nav:
+    home: "首页"
+    about-us: "关于我们"
+    community: "社区"
+    terms: "服务条款"
+    blog: "博客"
