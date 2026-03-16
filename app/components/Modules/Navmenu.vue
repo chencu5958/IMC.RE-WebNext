@@ -165,7 +165,7 @@ onUnmounted(() => {
                     </div>
                 </div>
 
-                <div v-else key="desktop" class="horizon-nav-wrapper-desktop"><!---->
+                <div v-else key="desktop" class="horizon-nav-wrapper-desktop">
                     <div class="horizon-nav__popup horizon-widget-container" :style="widgetPopStyle">
                         User Account
                     </div>

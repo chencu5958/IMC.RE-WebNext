@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ProgressIndicator, ProgressRoot } from 'reka-ui'
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { animate } from 'animejs';
 import { useNuxtApp } from '#app';
@@ -73,12 +74,12 @@ onUnmounted(() => {
                 <ScrollingText :text="$t('i18n-common-string.uni.web-loading-desc')" :speed="30" :repeat-count="0"
                     separator=" • " :enable-word-split="true" text-class="horizon-loading-scrolling-text" />
             </div>
-            <div class="horizon-loading-progress">
+            <ProgressRoot v-model="progress" class="horizon-loading-progress">
                 <div class="horizon-loading-text">
                     {{ $t('i18n-common-string.uni.web-loading', [progress]) }}
                 </div>
-                <div class="horizon-loading-progress-fill" :style="{ width: progress + '%' }"></div>
-            </div>
+                <ProgressIndicator class="horizon-loading-progress-fill" :style="{ width: progress + '%' }" />
+            </ProgressRoot>
         </div>
     </div>
 </template>
