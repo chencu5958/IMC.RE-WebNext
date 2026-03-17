@@ -1,39 +1,16 @@
 <script lang="ts" setup>
+import { createTitleWithInterpolation } from '~/utils/titleHelper'
 const route = useRoute()
 const { t } = useI18n()
 const head = useLocaleHead()
 const keyBrand = 'i18n-common-string.info.brand-full'
 const keyDesc = 'i18n-common-string.uni.web-desc'
 const keyKeywords = 'i18n-common-string.uni.web-keywords'
+const keyUndefined = 'i18n-common-string.error.undefined-i18n-text'
 
-// 添加错误处理
-const getTitle = () => {
-  try {
-    return t(keyBrand, { title: t(route.meta.title as string || keyBrand) })
-  } catch (e) {
-    return 'IMC.RE'
-  }
-}
-
-const getDescription = () => {
-  try {
-    return t(keyDesc, { title: t(route.meta.title as string || keyDesc) })
-  } catch (e) {
-    return 'IMC.RE Official Website'
-  }
-}
-
-const getKeywords = () => {
-  try {
-    return t(keyKeywords, { title: t(route.meta.title as string || keyKeywords) })
-  } catch (e) {
-    return 'IMC, IMC.RE, official website'
-  }
-}
-
-const title = computed(() => getTitle())
-const description = computed(() => getDescription())
-const keywords = computed(() => getKeywords())
+const title = computed(() => createTitleWithInterpolation(t, keyBrand, route.meta, keyUndefined))
+const description = computed(() => createTitleWithInterpolation(t, keyDesc, route.meta, keyUndefined))
+const keywords = computed(() => createTitleWithInterpolation(t, keyKeywords, route.meta, keyUndefined))
 
 useHead({
   title: title,
