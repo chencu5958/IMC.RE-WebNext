@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { createTitleWithInterpolation } from '~/utils/titleHelper'
 const route = useRoute()
 const { t } = useI18n()
 const head = useLocaleHead()
+import { createTitleWithInterpolation } from '~/utils/titleHelper'
 const keyBrand = 'i18n-common-string.info.brand-full'
 const keyDesc = 'i18n-common-string.uni.web-desc'
 const keyKeywords = 'i18n-common-string.uni.web-keywords'

@@ -1,4 +1,6 @@
 @use "sass:string";
+@use "sass:map";
+@use "sass:list";
 
 // 装饰性样式混合宏
 // 用于创建统一的视觉装饰效果
@@ -86,9 +88,9 @@
     $transition-duration: 0.3s,
     $transition-easing: ease
 ) {
-    $color1: nth($colors, 1);
-    $color2: nth($colors, 2);
-    $color3: nth($colors, 3);
+    $color1: list.nth($colors, 1);
+    $color2: list.nth($colors, 2);
+    $color3: list.nth($colors, 3);
 
     // 渐变方向映射
     $gradient-map: (
@@ -111,7 +113,7 @@
         width: $width;
         height: $height;
         border-radius: $border-radius;
-        background-image: map-get($gradient-map, $gradient-direction);
+        background-image: map.get($gradient-map, $gradient-direction);
         background-size: 100% 300%;
         background-position: 0 100%;
         clip-path: inset(0 0 0 0);

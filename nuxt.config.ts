@@ -72,9 +72,11 @@ export default defineNuxtConfig({
       alwaysRedirect: true
     },
     locales: [
-      { code: 'zh-CN', language: 'zh-CN', file: 'zh-CN.yml' },
-      { code: 'zh-Hant', language: 'zh-Hant', file: 'zh-Hant.yml' },
-      { code: 'en-US', language: 'en-US', file: 'en-US.yml' }
+      // CoreUI Flags Icon
+      // https://icon-sets.iconify.design/cif/?keyword=cif
+      { code: 'zh-CN', name: '简体中文', language: 'zh-CN', file: 'zh-CN.yml', flag: 'cn' },
+      { code: 'zh-Hant', name: '繁體中文', language: 'zh-Hant', file: 'zh-Hant.yml', flag: 'hk' },
+      { code: 'en-US', name: 'English', language: 'en-US', file: 'en-US.yml', flag: 'us' }
     ]
   },
 

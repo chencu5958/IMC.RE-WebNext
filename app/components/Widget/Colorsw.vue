@@ -74,7 +74,7 @@ const onClick = () => {
           <Icon :key="colorMode.preference" :name="getIconName()" class="theme-icon rmc-button-icon" />
         </Transition>
         <!--
-        <span class="rmc-sr-only">{{ $t('rmc-common-string.uni.theme-toggle') }} : {{ $colorMode.value }}</span>-->
+        <span class="rmc-sr-only">{{ $t('i18n-common-string.uni.theme-toggle') }} : {{ $colorMode.value }}</span>-->
       </client-only>
     </button>
   </Button>
